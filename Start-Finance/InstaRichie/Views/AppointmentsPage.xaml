@@ -13,19 +13,15 @@
     along with Start Finance.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-
+    
 <Page
-    x:Class="StartFinance.Views.TransactionPage"
+    x:Class="StartFinance.Views.AppointmentsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:Behaviors="using:Template10.Behaviors"
-    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:StartFinance.Views"
     xmlns:controls="using:Template10.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:StartFinance.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Loaded="Page_Loaded"
     xmlns:vm="using:StartFinance.ViewModels" mc:Ignorable="d">
 
     <Page.DataContext>
@@ -33,17 +29,19 @@
     </Page.DataContext>
 
     <Page.Resources>
-        <DataTemplate x:Key="AccountSelectionData">
+        <DataTemplate x:Key="AppointmentsDataViews">
             <Grid>
-                <StackPanel>
-                    <TextBlock>
-                        <Run Text="{Binding AccountName}"/>
-                        <Run Text="{Binding InitialAmount}"/>
-                    </TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Name}" Padding="0,0,15,0"/>
+                    <TextBlock Text="{Binding DateOfAppt}"/>
+                    <TextBlock Text="{Binding TimeOfAppt}"/>
+
                 </StackPanel>
             </Grid>
         </DataTemplate>
     </Page.Resources>
+
+
 
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -81,7 +79,7 @@
 
         <controls:PageHeader x:Name="pageHeader" RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True" Text="Add Transaction">
+                             RelativePanel.AlignTopWithPanel="True" Text="Appointments">
 
             <!--  secondary commands  -->
             <controls:PageHeader.SecondaryCommands>
@@ -92,56 +90,86 @@
 
         </controls:PageHeader>
 
-        <controls:PageHeader x:Name="pageFooter" RelativePanel.AlignLeftWithPanel="True"
-                             RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignBottomWithPanel="True">
+        <controls:PageHeader x:Name="AddAppointmentsFooter" RelativePanel.AlignLeftWithPanel="True"
+			RelativePanel.AlignRightWithPanel="True"
+			RelativePanel.AlignBottomWithPanel="True">
 
-            <!--  secondary commands  -->
+            <!--  Primary commands  -->
             <controls:PageHeader.PrimaryCommands>
-                <AppBarButton Icon="Add" Label="Add Transaction" Click="AddData"/>
-            </controls:PageHeader.PrimaryCommands>
-
-        </controls:PageHeader>
-        
-        <controls:PageHeader x:Name="InternFooter" RelativePanel.AlignLeftWithPanel="True"
-                             RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignBottomWithPanel="True">
-
-            <!--  secondary commands  -->
-            <controls:PageHeader.PrimaryCommands>
-                <AppBarButton Icon="Switch" Label="Transfer" Click="Transfer_Click"/>
+                <AppBarButton x:Name="AddAppt" Icon="Add" Label="Add Appt" Click="AddAppointment_Click"/>
             </controls:PageHeader.PrimaryCommands>
 
         </controls:PageHeader>
 
-        <!--Page Conetents start here-->
-        <Pivot Grid.Row="1" x:Name="pagecontent" SelectionChanged="Pivot_SelectionChanged">
+        <controls:PageHeader x:Name="CancelAppointmentsFooter" RelativePanel.AlignLeftWithPanel="True"
+			RelativePanel.AlignRightWithPanel="True"
+			RelativePanel.AlignBottomWithPanel="True">
+
+            <!--  Primary commands  -->
+            <controls:PageHeader.PrimaryCommands>
+                <AppBarButton x:Name="RemoveAppt" Icon="Delete" Label="Remove Appt" Click="DeleteAppointment_Click" />
+            </controls:PageHeader.PrimaryCommands>
+
+        </controls:PageHeader>
+
+
+
+        <!-- content starts here -->
+        <Pivot x:Name="AppointmentsPivot" SelectionChanged="AppointmentsPivot_SelectionChanged">
             <RelativePanel.Below>pageHeader</RelativePanel.Below>
-            <PivotItem Header="Add Transaction">
+            
+            <PivotItem x:Name="AddAppointments" Header="Add Appointment">
+                <RelativePanel.Above>AddAppointmentsFooter</RelativePanel.Above>
                 <Grid>
-                    <StackPanel Grid.Row="1" VerticalAlignment="Top" Orientation="Vertical" Margin="10,5,10,0">
-                        <ComboBox x:Name="AccountsListSel" Header="Select the account" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemTemplate="{StaticResource AccountSelectionData}"/>
-                        <CalendarDatePicker x:Name="DateStamp" Header="Date" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                        <ComboBox x:Name="IncExpSelect" Header="Select Income or Expense" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectedIndex="0">
-                            <ComboBoxItem Content="Income"/>
-                            <ComboBoxItem Content="Expense"/>
-                        </ComboBox>
-                        <TextBox x:Name="MoneyIn" Header="Amount" PlaceholderText="100.00" TextWrapping="Wrap" InputScope="Number"/>
-                        <TextBox x:Name="Desc" Header="Description" PlaceholderText="Food, Travel, Utilities..."/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel x:Name="pageStart" Grid.Row="0" VerticalAlignment="Top" Orientation="Vertical" Margin="10,5,10,0">
+                        
+                        <RelativePanel.Below>pageHeader</RelativePanel.Below>
+                        <TextBox x:Name="PersonName" TextWrapping="Wrap" PlaceholderText="John Smith" Header="Name"/>
+                        <CalendarDatePicker x:Name="ApptDate" Header="Date" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        <TimePicker x:Name="ApptTime" Header="Time" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        
+                   
                     </StackPanel>
+                    
                 </Grid>
             </PivotItem>
-            <PivotItem Header="Internal Transfer">
+
+            <PivotItem x:Name="CancelAppointments" Header="View / Cancel Appointments">
+                <RelativePanel.Above>CancelAppointmentsFooter</RelativePanel.Above>
                 <Grid>
-                    <StackPanel Grid.Row="1" VerticalAlignment="Top" Orientation="Vertical" Margin="10,5,10,0">
-                        <ComboBox x:Name="FromAccountsSel" Header="Transfer From Account" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemTemplate="{StaticResource AccountSelectionData}"/>
-                        <ComboBox x:Name="ToAccountSel" Header="Transfer To" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemTemplate="{StaticResource AccountSelectionData}"/>
-                        <CalendarDatePicker x:Name="TranDateStamp" Header="Date" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                        <TextBox x:Name="TransferMoney" Header="Amount" TextWrapping="Wrap" PlaceholderText="1000.00" InputScope="Number"/>
-                        <TextBox x:Name="TDesc" Header="Description" PlaceholderText="Withdrawn from account"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="200"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel x:Name="pageStart1" Grid.Row="0" VerticalAlignment="Top" Orientation="Vertical" Margin="10,5,10,15">
+
+                        <ListView x:Name="AppointmentsList1" Margin="10,5,10,0" Grid.Row="1"
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                               ItemTemplate="{StaticResource AppointmentsDataViews}">
+
+                            <RelativePanel.Below>pageStart</RelativePanel.Below>
+                            <RelativePanel.Above>AddAppointmentsFooter</RelativePanel.Above>
+                            <!--Populated via C# -->
+                        </ListView>
+
                     </StackPanel>
+
+                   
+
+
+
                 </Grid>
             </PivotItem>
         </Pivot>
+
+
+
     </RelativePanel>
+
+
 </Page>
