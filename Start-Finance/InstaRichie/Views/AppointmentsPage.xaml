@@ -39,6 +39,18 @@
                 </StackPanel>
             </Grid>
         </DataTemplate>
+
+        <DataTemplate x:Key="AppointmentsSelectionData">
+            <Grid>
+                <StackPanel>
+                    <TextBlock>
+                        <Run Text="{Binding Name}"/>
+                        <!--<Run Text="{Binding DateofAppt}"/>
+                         <Run Text="{Binding TimeofAppt}"/>-->
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
     </Page.Resources>
 
 
@@ -112,6 +124,17 @@
 
         </controls:PageHeader>
 
+        <controls:PageHeader x:Name="UpdateAppointmentsFooter" RelativePanel.AlignLeftWithPanel="True"
+			RelativePanel.AlignRightWithPanel="True"
+			RelativePanel.AlignBottomWithPanel="True">
+
+            <!--  Primary commands  -->
+            <controls:PageHeader.PrimaryCommands>
+                <AppBarButton x:Name="UpdateAppt" Icon="Edit" Label="Edit Appt" Click="UpdateAppointment_Click" />
+            </controls:PageHeader.PrimaryCommands>
+
+        </controls:PageHeader>
+
 
 
         <!-- content starts here -->
@@ -132,10 +155,10 @@
                         <CalendarDatePicker x:Name="ApptDate" Header="Date" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         <TimePicker x:Name="ApptTime" Header="Time" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         
-                   
                     </StackPanel>
                     
                 </Grid>
+            
             </PivotItem>
 
             <PivotItem x:Name="CancelAppointments" Header="View / Cancel Appointments">
@@ -158,13 +181,38 @@
                         </ListView>
 
                     </StackPanel>
+                 </Grid>
+            </PivotItem>
 
-                   
+            <PivotItem x:Name="UpdateAppointments" Header="Update Appointments">
+                <RelativePanel.Above>UpdateAppointmentsFooter</RelativePanel.Above>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="200"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel x:Name="pageStart2" Grid.Row="0" VerticalAlignment="Top" Orientation="Vertical" Margin="10,5,10,15">
+
+                        <ComboBox x:Name="AppointmentsSelect" PlaceholderText="Select an Appointment to edit" Header="Appt" HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch" ItemTemplate="{StaticResource AppointmentsSelectionData}">
+                        </ComboBox>
+
+                        <CalendarDatePicker x:Name="UpdateApptDate" Header="Select New Date" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        <TimePicker x:Name="UpdateApptTime" Header="Select New Time" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
 
 
+                        <RelativePanel.Below>pageStart</RelativePanel.Below>
+                            <RelativePanel.Above>UpdateAppointmentsFooter</RelativePanel.Above>
+                            <!--Populated via C# -->
+                      
+
+                    </StackPanel>
                 </Grid>
             </PivotItem>
+
+
         </Pivot>
 
 

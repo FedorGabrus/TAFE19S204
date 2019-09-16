@@ -50,7 +50,7 @@ namespace StartFinance.Views {
                     string CDay = ApptDate.Date.Value.Day.ToString();
                     string CMonth = ApptDate.Date.Value.Month.ToString();
                     string CYear = ApptDate.Date.Value.Year.ToString();
-                    string FinalDate = "" + CMonth + "/" + CDay + "/" + CYear;
+                    string FinalDate = CMonth + "/" + CDay + "/" + CYear;
                     string FinalTime = ApptTime.Time.ToString();
                    
                     conn.CreateTable<Models.Appointment>();
@@ -89,6 +89,53 @@ namespace StartFinance.Views {
         }
 
 
+        private async void UpdateAppointment_Click(object sender, RoutedEventArgs e){
+
+            try{
+
+                if (AppointmentsSelect.SelectedItem == null || UpdateApptDate.Date == null || UpdateApptTime.Time == null){
+
+                    MessageDialog dialog1 = new MessageDialog("You forgot to Enter all required information", "Oops..!");
+                    await dialog1.ShowAsync();
+
+                }
+
+                else{
+
+                    string name = ((Appointment)AppointmentsSelect.SelectedItem).Name;
+                    string CDay = UpdateApptDate.Date.Value.Day.ToString();
+                    string CMonth = UpdateApptDate.Date.Value.Month.ToString();
+                    string CYear = UpdateApptDate.Date.Value.Year.ToString();
+                    string FinalDate = CMonth + "/" + CDay + "/" + CYear;
+                    string FinalTime = UpdateApptTime.Time.ToString();
+
+                    var query3 = conn.Query<Appointment>(query: "UPDATE Appointment SET DateOfAppt = '" + FinalDate + "', TimeOfAppt = '" + FinalTime + "' WHERE Name ='" + name + "'");
+
+                    MessageDialog dialog = new MessageDialog("Appointment Updated for " + name + " ", "Sweet!");
+                    await dialog.ShowAsync();
+
+                }
+                
+            }
+            catch (Exception ex) {
+
+                if (ex is FormatException){
+
+                    MessageDialog dialog = new MessageDialog("You forgot to enter the Date or Time", "Oops..!");
+                    await dialog.ShowAsync();
+
+                }
+               
+                else{
+
+                    /// no idea
+                }
+            }
+        }
+
+
+
+
         private async void DeleteAppointment_Click(object sender, RoutedEventArgs e){
 
             try {
@@ -121,20 +168,36 @@ namespace StartFinance.Views {
 
             int no = AppointmentsPivot.SelectedIndex;
 
-            if (no == 0){
+            if (no == 0)
+            {
                 AddAppointmentsFooter.Visibility = Visibility.Visible;
                 CancelAppointmentsFooter.Visibility = Visibility.Collapsed;
+                UpdateAppointmentsFooter.Visibility = Visibility.Collapsed;
+                conn.CreateTable<Appointment>();
+                var query = conn.Table<Appointment>();
+                
+            }
+
+            else if (no == 1) {
+
+                CancelAppointmentsFooter.Visibility = Visibility.Visible;
+                AddAppointmentsFooter.Visibility = Visibility.Collapsed;
+                UpdateAppointmentsFooter.Visibility = Visibility.Collapsed;
                 conn.CreateTable<Appointment>();
                 var query = conn.Table<Appointment>();
                 AppointmentsList1.ItemsSource = query.ToList();
+
             }
-            else
-            {
-                CancelAppointmentsFooter.Visibility = Visibility.Visible;
+
+
+            else{
+
+                UpdateAppointmentsFooter.Visibility = Visibility.Visible;
+                CancelAppointmentsFooter.Visibility = Visibility.Collapsed;
                 AddAppointmentsFooter.Visibility = Visibility.Collapsed;
                 conn.CreateTable<Appointment>();
                 var query = conn.Table<Appointment>();
-                AppointmentsList1.ItemsSource = query.ToList();
+                AppointmentsSelect.ItemsSource = query.ToList();
             }
         }
     }
