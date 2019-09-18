@@ -12,7 +12,7 @@ namespace StartFinance.Models
         private DateTime dob;
 
         [PrimaryKey, AutoIncrement]
-        public int PeronalID
+        public int PersonalID
         {
             set; get;
         }
