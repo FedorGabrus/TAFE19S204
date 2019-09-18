@@ -1,0 +1,222 @@
+﻿<!--
+    Start Finance - An to manage your personal finances.
+    Copyright (C) 2016  Jijo Bose
+    Start Finance is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    Start Finance is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with Start Finance.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<Page
+    x:Class="StartFinance.Views.AppointmentsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:StartFinance.Views"
+    xmlns:controls="using:Template10.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:StartFinance.ViewModels" mc:Ignorable="d">
+
+    <Page.DataContext>
+        <vm:MainPageViewModel x:Name="ViewModel" />
+    </Page.DataContext>
+
+    <Page.Resources>
+        <DataTemplate x:Key="AppointmentsDataViews">
+            <Grid>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Name}" Padding="0,0,15,0"/>
+                    <TextBlock Text="{Binding DateOfAppt}"/>
+                    <TextBlock Text="{Binding TimeOfAppt}"/>
+
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="AppointmentsSelectionData">
+            <Grid>
+                <StackPanel>
+                    <TextBlock>
+                        <Run Text="{Binding Name}"/>
+                        <!--<Run Text="{Binding DateofAppt}"/>
+                         <Run Text="{Binding TimeofAppt}"/>-->
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
+
+
+    <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="AdaptiveVisualStateGroup">
+                <VisualState x:Name="VisualStateNarrow">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource NarrowMinWidth}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!--  TODO: change properties for narrow view  -->
+                        <!--<Setter Target="stateTextBox.Text" Value="Narrow Visual State" />-->
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VisualStateNormal">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource NormalMinWidth}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!--  TODO: change properties for normal view  -->
+                        <!--<Setter Target="stateTextBox.Text" Value="Normal Visual State" />-->
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VisualStateWide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource WideMinWidth}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!--  TODO: change properties for wide view  -->
+                        <!--<Setter Target="stateTextBox.Text" Value="Wide Visual State" />-->
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <controls:PageHeader x:Name="pageHeader" RelativePanel.AlignLeftWithPanel="True"
+                             RelativePanel.AlignRightWithPanel="True"
+                             RelativePanel.AlignTopWithPanel="True" Text="Appointments">
+
+            <!--  secondary commands  -->
+            <controls:PageHeader.SecondaryCommands>
+                <AppBarButton Click="{x:Bind ViewModel.GotoSettings}" Label="Settings" />
+                <AppBarButton Click="{x:Bind ViewModel.GotoPrivacy}" Label="Privacy" />
+                <AppBarButton Click="{x:Bind ViewModel.GotoAbout}" Label="About" />
+            </controls:PageHeader.SecondaryCommands>
+
+        </controls:PageHeader>
+
+        <controls:PageHeader x:Name="AddAppointmentsFooter" RelativePanel.AlignLeftWithPanel="True"
+			RelativePanel.AlignRightWithPanel="True"
+			RelativePanel.AlignBottomWithPanel="True">
+
+            <!--  Primary commands  -->
+            <controls:PageHeader.PrimaryCommands>
+                <AppBarButton x:Name="AddAppt" Icon="Add" Label="Add Appt" Click="AddAppointment_Click"/>
+            </controls:PageHeader.PrimaryCommands>
+
+        </controls:PageHeader>
+
+        <controls:PageHeader x:Name="CancelAppointmentsFooter" RelativePanel.AlignLeftWithPanel="True"
+			RelativePanel.AlignRightWithPanel="True"
+			RelativePanel.AlignBottomWithPanel="True">
+
+            <!--  Primary commands  -->
+            <controls:PageHeader.PrimaryCommands>
+                <AppBarButton x:Name="RemoveAppt" Icon="Delete" Label="Remove Appt" Click="DeleteAppointment_Click" />
+            </controls:PageHeader.PrimaryCommands>
+
+        </controls:PageHeader>
+
+        <controls:PageHeader x:Name="UpdateAppointmentsFooter" RelativePanel.AlignLeftWithPanel="True"
+			RelativePanel.AlignRightWithPanel="True"
+			RelativePanel.AlignBottomWithPanel="True">
+
+            <!--  Primary commands  -->
+            <controls:PageHeader.PrimaryCommands>
+                <AppBarButton x:Name="UpdateAppt" Icon="Edit" Label="Edit Appt" Click="UpdateAppointment_Click" />
+            </controls:PageHeader.PrimaryCommands>
+
+        </controls:PageHeader>
+
+
+
+        <!-- content starts here -->
+        <Pivot x:Name="AppointmentsPivot" SelectionChanged="AppointmentsPivot_SelectionChanged">
+            <RelativePanel.Below>pageHeader</RelativePanel.Below>
+
+            <PivotItem x:Name="AddAppointments" Header="Add Appointment">
+                <RelativePanel.Above>AddAppointmentsFooter</RelativePanel.Above>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel x:Name="pageStart" Grid.Row="0" VerticalAlignment="Top" Orientation="Vertical" Margin="10,5,10,0">
+
+                        <RelativePanel.Below>pageHeader</RelativePanel.Below>
+                        <TextBox x:Name="PersonName" TextWrapping="Wrap" PlaceholderText="John Smith" Header="Name"/>
+                        <CalendarDatePicker x:Name="ApptDate" Header="Date" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        <TimePicker x:Name="ApptTime" Header="Time" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+                    </StackPanel>
+
+                </Grid>
+
+            </PivotItem>
+
+            <PivotItem x:Name="CancelAppointments" Header="View / Cancel Appointments">
+                <RelativePanel.Above>CancelAppointmentsFooter</RelativePanel.Above>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="200"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel x:Name="pageStart1" Grid.Row="0" VerticalAlignment="Top" Orientation="Vertical" Margin="10,5,10,15">
+
+                        <ListView x:Name="AppointmentsList1" Margin="10,5,10,0" Grid.Row="1"
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                               ItemTemplate="{StaticResource AppointmentsDataViews}">
+
+                            <RelativePanel.Below>pageStart</RelativePanel.Below>
+                            <RelativePanel.Above>AddAppointmentsFooter</RelativePanel.Above>
+                            <!--Populated via C# -->
+                        </ListView>
+
+                    </StackPanel>
+                </Grid>
+            </PivotItem>
+
+            <PivotItem x:Name="UpdateAppointments" Header="Update Appointments">
+                <RelativePanel.Above>UpdateAppointmentsFooter</RelativePanel.Above>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="200"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel x:Name="pageStart2" Grid.Row="0" VerticalAlignment="Top" Orientation="Vertical" Margin="10,5,10,15">
+
+                        <ComboBox x:Name="AppointmentsSelect" PlaceholderText="Select an Appointment to edit" Header="Appt" HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch" ItemTemplate="{StaticResource AppointmentsSelectionData}">
+                        </ComboBox>
+
+                        <CalendarDatePicker x:Name="UpdateApptDate" Header="Select New Date" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        <TimePicker x:Name="UpdateApptTime" Header="Select New Time" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+
+
+                        <RelativePanel.Below>pageStart</RelativePanel.Below>
+                        <RelativePanel.Above>UpdateAppointmentsFooter</RelativePanel.Above>
+                        <!--Populated via C# -->
+
+
+                    </StackPanel>
+                </Grid>
+            </PivotItem>
+
+
+        </Pivot>
+
+
+
+    </RelativePanel>
+
+
+</Page>
