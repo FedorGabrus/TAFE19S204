@@ -102,7 +102,6 @@
             </controls:PageHeader.PrimaryCommands>
 
         </controls:PageHeader>
-        
         <controls:PageHeader x:Name="InternFooter" RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
                              RelativePanel.AlignBottomWithPanel="True">
