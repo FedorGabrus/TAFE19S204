@@ -10,17 +10,20 @@ using System.Linq;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace StartFinance.Views {
+namespace StartFinance.Views
+{
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AppointmentsPage : Page {
+    public sealed partial class AppointmentsPage : Page
+    {
 
         SQLiteConnection conn; // adding an SQLite connection
         string path = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "Findata.sqlite");
 
-        public AppointmentsPage(){
-            
+        public AppointmentsPage()
+        {
+
             this.InitializeComponent();
             NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
             conn = new SQLite.Net.SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), path);
@@ -29,38 +32,44 @@ namespace StartFinance.Views {
 
         }
 
-        public void Results(){
+        public void Results()
+        {
             conn.CreateTable<Models.Appointment>();
             var query1 = conn.Table<Models.Appointment>();
             //AppointmentsListView.ItemsSource = query1.ToList();
         }
 
-        private async void AddAppointment_Click(object sender, RoutedEventArgs e){
+        private async void AddAppointment_Click(object sender, RoutedEventArgs e)
+        {
 
-            try{
+            try
+            {
 
-                if (PersonName.Text.ToString() == ""){
+                if (PersonName.Text.ToString() == "")
+                {
 
                     MessageDialog dialog = new MessageDialog("No Name entered", "Oops..!");
                     await dialog.ShowAsync();
                 }
 
-                else {
+                else
+                {
 
                     string CDay = ApptDate.Date.Value.Day.ToString();
                     string CMonth = ApptDate.Date.Value.Month.ToString();
                     string CYear = ApptDate.Date.Value.Year.ToString();
                     string FinalDate = CMonth + "/" + CDay + "/" + CYear;
                     string FinalTime = ApptTime.Time.ToString();
-                   
+
                     conn.CreateTable<Models.Appointment>();
-                    conn.Insert(new Appointment {
+                    conn.Insert(new Appointment
+                    {
 
                         Name = PersonName.Text.ToString(),
                         DateOfAppt = FinalDate,
                         TimeOfAppt = FinalTime
                     });
-                    
+
                     // Creating table
                     Results();
 
@@ -68,39 +77,47 @@ namespace StartFinance.Views {
                     await dialog.ShowAsync();
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
 
-                if (ex is FormatException){
+                if (ex is FormatException)
+                {
 
                     MessageDialog dialog = new MessageDialog("You forgot to enter the Name, Date or Time", "Oops..!");
                     await dialog.ShowAsync();
                 }
-                else if (ex is SQLiteException){
+                else if (ex is SQLiteException)
+                {
 
                     MessageDialog dialog = new MessageDialog("Name already exist, Try Different Name", "Oops..!");
                     await dialog.ShowAsync();
                 }
 
-                else{
-                    
+                else
+                {
+
                     /// no idea
                 }
             }
         }
 
 
-        private async void UpdateAppointment_Click(object sender, RoutedEventArgs e){
+        private async void UpdateAppointment_Click(object sender, RoutedEventArgs e)
+        {
 
-            try{
+            try
+            {
 
-                if (AppointmentsSelect.SelectedItem == null || UpdateApptDate.Date == null || UpdateApptTime.Time == null){
+                if (AppointmentsSelect.SelectedItem == null || UpdateApptDate.Date == null || UpdateApptTime.Time == null)
+                {
 
                     MessageDialog dialog1 = new MessageDialog("You forgot to Enter all required information", "Oops..!");
                     await dialog1.ShowAsync();
 
                 }
 
-                else{
+                else
+                {
 
                     string name = ((Appointment)AppointmentsSelect.SelectedItem).Name;
                     string CDay = UpdateApptDate.Date.Value.Day.ToString();
@@ -115,18 +132,21 @@ namespace StartFinance.Views {
                     await dialog.ShowAsync();
 
                 }
-                
-            }
-            catch (Exception ex) {
 
-                if (ex is FormatException){
+            }
+            catch (Exception ex)
+            {
+
+                if (ex is FormatException)
+                {
 
                     MessageDialog dialog = new MessageDialog("You forgot to enter the Date or Time", "Oops..!");
                     await dialog.ShowAsync();
 
                 }
-               
-                else{
+
+                else
+                {
 
                     /// no idea
                 }
@@ -136,19 +156,23 @@ namespace StartFinance.Views {
 
 
 
-        private async void DeleteAppointment_Click(object sender, RoutedEventArgs e){
+        private async void DeleteAppointment_Click(object sender, RoutedEventArgs e)
+        {
 
-            try {
+            try
+            {
 
                 string ApptSelection = ((Appointment)AppointmentsList1.SelectedItem).Name;
 
-                if (ApptSelection == "") {
+                if (ApptSelection == "")
+                {
 
                     MessageDialog dialog = new MessageDialog("Not selected the Item", "Oops..!");
                     await dialog.ShowAsync();
                 }
 
-                else{
+                else
+                {
 
                     conn.CreateTable<Appointment>();
                     var query1 = conn.Table<Appointment>();
@@ -157,14 +181,16 @@ namespace StartFinance.Views {
                 }
             }
 
-            catch (NullReferenceException){
+            catch (NullReferenceException)
+            {
                 MessageDialog dialog = new MessageDialog("Not selected the Item", "Oops..!");
                 await dialog.ShowAsync();
             }
         }
 
 
-        private void AppointmentsPivot_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+        private void AppointmentsPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
 
             int no = AppointmentsPivot.SelectedIndex;
 
@@ -175,10 +201,11 @@ namespace StartFinance.Views {
                 UpdateAppointmentsFooter.Visibility = Visibility.Collapsed;
                 conn.CreateTable<Appointment>();
                 var query = conn.Table<Appointment>();
-                
+
             }
 
-            else if (no == 1) {
+            else if (no == 1)
+            {
 
                 CancelAppointmentsFooter.Visibility = Visibility.Visible;
                 AddAppointmentsFooter.Visibility = Visibility.Collapsed;
@@ -190,7 +217,8 @@ namespace StartFinance.Views {
             }
 
 
-            else{
+            else
+            {
 
                 UpdateAppointmentsFooter.Visibility = Visibility.Visible;
                 CancelAppointmentsFooter.Visibility = Visibility.Collapsed;

@@ -11,9 +11,8 @@
     GNU General Public License for more details.
     You should have received a copy of the GNU General Public License
     along with Start Finance.  If not, see <http://www.gnu.org/licenses/>.
-
 -->
-    
+
 <Page
     x:Class="StartFinance.Views.AppointmentsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -140,7 +139,7 @@
         <!-- content starts here -->
         <Pivot x:Name="AppointmentsPivot" SelectionChanged="AppointmentsPivot_SelectionChanged">
             <RelativePanel.Below>pageHeader</RelativePanel.Below>
-            
+
             <PivotItem x:Name="AddAppointments" Header="Add Appointment">
                 <RelativePanel.Above>AddAppointmentsFooter</RelativePanel.Above>
                 <Grid>
@@ -149,16 +148,16 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <StackPanel x:Name="pageStart" Grid.Row="0" VerticalAlignment="Top" Orientation="Vertical" Margin="10,5,10,0">
-                        
+
                         <RelativePanel.Below>pageHeader</RelativePanel.Below>
                         <TextBox x:Name="PersonName" TextWrapping="Wrap" PlaceholderText="John Smith" Header="Name"/>
                         <CalendarDatePicker x:Name="ApptDate" Header="Date" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         <TimePicker x:Name="ApptTime" Header="Time" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                        
+
                     </StackPanel>
-                    
+
                 </Grid>
-            
+
             </PivotItem>
 
             <PivotItem x:Name="CancelAppointments" Header="View / Cancel Appointments">
@@ -181,7 +180,7 @@
                         </ListView>
 
                     </StackPanel>
-                 </Grid>
+                </Grid>
             </PivotItem>
 
             <PivotItem x:Name="UpdateAppointments" Header="Update Appointments">
@@ -204,9 +203,9 @@
 
 
                         <RelativePanel.Below>pageStart</RelativePanel.Below>
-                            <RelativePanel.Above>UpdateAppointmentsFooter</RelativePanel.Above>
-                            <!--Populated via C# -->
-                      
+                        <RelativePanel.Above>UpdateAppointmentsFooter</RelativePanel.Above>
+                        <!--Populated via C# -->
+
 
                     </StackPanel>
                 </Grid>
