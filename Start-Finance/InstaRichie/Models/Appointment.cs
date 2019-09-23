@@ -5,11 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StartFinance.Models
-{
+namespace StartFinance.Models {
 
-    public class Appointment
-    {
+   public class Appointment{
 
         [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
